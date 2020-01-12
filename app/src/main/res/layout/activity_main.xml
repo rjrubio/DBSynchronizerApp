@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/button_college"
+        android:layout_width="216dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="41dp"
+        android:layout_marginEnd="91dp"
+        android:layout_marginBottom="18dp"
+        android:text="College"
+        app:layout_constraintBottom_toTopOf="@+id/button_faculty"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/button_enrollment"
+        android:layout_width="216dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="91dp"
+        android:layout_marginBottom="23dp"
+        android:text="Enrollment"
+        app:layout_constraintBottom_toTopOf="@+id/button_synch"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/button_synch"
+        android:layout_width="216dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginEnd="91dp"
+        android:layout_marginBottom="255dp"
+        android:text="Synch Data"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_faculty"
+        android:layout_width="216dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginEnd="91dp"
+        android:layout_marginBottom="20dp"
+        android:text="Faculty"
+        app:layout_constraintBottom_toTopOf="@+id/button_student"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_student"
+        android:layout_width="216dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginEnd="91dp"
+        android:layout_marginBottom="20dp"
+        android:text="Student"
+        app:layout_constraintBottom_toTopOf="@+id/button_subject"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_subject"
+        android:layout_width="216dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginEnd="91dp"
+        android:layout_marginBottom="17dp"
+        android:text="College"
+        app:layout_constraintBottom_toTopOf="@+id/button_program"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_program"
+        android:layout_width="216dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginEnd="91dp"
+        android:layout_marginBottom="16dp"
+        android:text="Programs/Courses"
+        app:layout_constraintBottom_toTopOf="@+id/button_enrollment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="341dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="39dp"
+        android:fontFamily="monospace"
+        android:text="University Enrollment"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

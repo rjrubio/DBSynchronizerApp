@@ -34,7 +34,7 @@ public class CollegeActivity extends AppCompatActivity {
         }catch (SQLException ex){
             Log.e("College Activity :",ex.toString());
         }
-        CollegeAdapter dw = new CollegeAdapter(collegeList,getApplicationContext());
+        CollegeAdapter dw = new CollegeAdapter(collegeList,this);
         recycleView.setAdapter(dw);
 
         btnAddCollege.setOnClickListener(onAddCollegeListener());

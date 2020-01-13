@@ -20,7 +20,7 @@ public class AddingCollegeActivity extends AppCompatActivity {
     private View btnCancel;
     private List<College> collegeList;
     private int status = 0;
-    private View checkBox;
+    private CheckBox checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class AddingCollegeActivity extends AppCompatActivity {
                         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
                         College college = new College();
                         college.setCollegeName(input_college.getText().toString().trim());
-                        college.setStatus(status);
+                        college.setStatus(checkBox.isChecked()?1:0);
                         college.setCreatedAt(db.getCurrentTimeStamp());
                         try {
                             //save new object to db

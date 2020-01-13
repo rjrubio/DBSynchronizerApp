@@ -103,9 +103,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return dao.createOrUpdate(obj);
     }
 
-    public <T> int deleteById(Class clazz, Object aId) throws SQLException {
+    public <T> int deleteById(Class clazz, T aId) throws SQLException {
         Dao<T, Object> dao = getDao(clazz);
-        return dao.deleteById(aId);
+        return dao.delete(aId);
     }
 
 

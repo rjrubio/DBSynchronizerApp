@@ -11,15 +11,12 @@ public interface DoSync {
     void doSync();
     String getLocalDBTimeStamp();
     void setLocalDBTimeStamp();
-    String getCloudDBTimeStamp();
     void setCloudDBTimeStamp();
-    String compareTimeStamp(String timestamp1, String Timestamp2);
-    int syncLocalDB();
-    int syncCloudDB();
-    int checkConnection();
-    void syncCloudDBTableData(String endPoint, String table_name, JSONArray jsonObject);
-    void synLocalDBTableData(String endPoint, String table_name);
-    void getCloudDBData(String endPoint, String table_name , final VolleyCallback callback);
-    void setCloudDBData(String endPoint, String table_name , JSONArray jsonObject, final VolleyCallback callback);
+    boolean compareTimeStamp(String timestamp1, String Timestamp2);
+    void pullLocalDBToCloud();
+    void pullCloudDBToLocal();
+    void checkConnection(String endpoint);
+    void getCloudDBData(String endPoint, final VolleyCallback callback);
+    void setCloudDBData(String endPoint, JSONArray jsonObject, final VolleyCallback callback);
 
 }

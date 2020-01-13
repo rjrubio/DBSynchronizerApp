@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +18,8 @@ public class CollegeActivity extends AppCompatActivity {
     private View btnAddCollege;
     private RecyclerView recycleView;
     private RecyclerView.LayoutManager layoutManager;
+    List<College> collegeList = null;
+    CollegeAdapter dw = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +31,12 @@ public class CollegeActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recycleView.setLayoutManager(layoutManager);
         DatabaseHelper db = new DatabaseHelper(this);
-        List<College> collegeList = null;
         try {
             collegeList = db.getAll(College.class);
         }catch (SQLException ex){
             Log.e("College Activity :",ex.toString());
         }
-        CollegeAdapter dw = new CollegeAdapter(collegeList,this);
+        dw = new CollegeAdapter(collegeList,this);
         recycleView.setAdapter(dw);
 
         btnAddCollege.setOnClickListener(onAddCollegeListener());
@@ -54,4 +56,20 @@ public class CollegeActivity extends AppCompatActivity {
         };
     }
 
+    @Override
+    public void onResume()
+    {  // After a pause OR at startup
+        super.onResume();
+        DatabaseHelper db = new DatabaseHelper(this);
+        try {
+            collegeList = db.getAll(College.class);
+            dw = new CollegeAdapter(collegeList,this);
+            recycleView.setAdapter(dw);
+            dw.notifyDataSetChanged();
+            Log.e("College ron :","rubio");
+        }catch (SQLException ex){
+            Log.e("College Activity :",ex.toString());
+        }
+
+    }
 }

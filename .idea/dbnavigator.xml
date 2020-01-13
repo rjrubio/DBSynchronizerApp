@@ -25,13 +25,13 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="58412eab-0ba6-415e-968f-692b0fc57d89">
-        <schema name="main" object-types="table, view" />
+        <schema name="main" object-types="dataset trigger, table, constraint, column, view, index" />
       </connection>
       <connection connection-id="6f41bfd4-6b83-460a-845e-083561afc1e1">
         <schema name="main" object-types="table, view" />
       </connection>
       <connection connection-id="5a04f15e-9218-4aca-ab7d-552c37b6e9c5">
-        <schema name="main" object-types="table, view" />
+        <schema name="main" object-types="dataset trigger, table, constraint, column, view, index" />
       </connection>
     </loaded-nodes>
   </component>
@@ -47,7 +47,9 @@
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="5a04f15e-9218-4aca-ab7d-552c37b6e9c5" object-ref="schemas/main/tables/college" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="58412eab-0ba6-415e-968f-692b0fc57d89" />
@@ -60,7 +62,7 @@
         <condition column="id" operator="=" value="" active="true" />
       </filter>
     </filter-actions>
-    <filter-actions connection-id="5a04f15e-9218-4aca-ab7d-552c37b6e9c5" dataset="main.college" active-filter-id="">
+    <filter-actions connection-id="5a04f15e-9218-4aca-ab7d-552c37b6e9c5" dataset="main.college" active-filter-id="EMPTY_FILTER">
       <filter id="0d57687a-4591-4bb0-acc4-58a52d56bff9" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="id" operator="=" value="" active="true" />
       </filter>
@@ -77,6 +79,11 @@
     </filter-actions>
     <filter-actions connection-id="58412eab-0ba6-415e-968f-692b0fc57d89" dataset="main.person" active-filter-id="">
       <filter id="0199c613-65ca-4696-9a5a-124bdee5d1e5" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="=" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="58412eab-0ba6-415e-968f-692b0fc57d89" dataset="main.college" active-filter-id="">
+      <filter id="8ba79c5f-3291-425a-babd-8ebb677fd3bb" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="id" operator="=" value="" active="true" />
       </filter>
     </filter-actions>

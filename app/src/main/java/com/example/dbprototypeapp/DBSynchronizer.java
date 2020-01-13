@@ -22,7 +22,6 @@ public class DBSynchronizer implements DoSync{
     private RequestQueue requestQueue = null;
     private  Context context = null;
     DatabaseHelper db_helper = null;
-    JSONArray genericResponse = null;
 
     public void initialize( Context context, RequestQueue requestQueue) {
 
@@ -31,7 +30,7 @@ public class DBSynchronizer implements DoSync{
         db_helper =  new DatabaseHelper(context);
     }
     @Override
-    public void getCloudDBData(String endPoint, String table_name , final VolleyCallback callback) {
+    public void getCloudDBData(String endPoint , final VolleyCallback callback) {
 
         JsonArrayRequest getRequest = new JsonArrayRequest(Request.Method.GET, endPoint, null,
                 new Response.Listener<JSONArray>() {
@@ -53,7 +52,7 @@ public class DBSynchronizer implements DoSync{
     }
 
     @Override
-    public void setCloudDBData(String endPoint, String table_name , JSONArray jsonObject, final VolleyCallback callback){
+    public void setCloudDBData(String endPoint, JSONArray jsonObject, final VolleyCallback callback){
 
         JsonArrayRequest getRequest = new JsonArrayRequest (Request.Method.PUT, endPoint, jsonObject,
                 new Response.Listener<JSONArray>()
@@ -75,32 +74,10 @@ public class DBSynchronizer implements DoSync{
         // add it to the RequestQueue
         requestQueue.add(getRequest);
     }
-    @Override
-    public void syncCloudDBTableData(String endPoint, String table_name, JSONArray jsonObject) {
-
-        getCloudDBData(endPoint, table_name, new VolleyCallback() {
-            @Override
-            public void onResponse(JSONArray result) {
-                try {
-                    genericResponse = result;
-                    for (int i = 0; i < result.length(); i++) {
-                        JSONObject jsonobject = result.getJSONObject(i);
-                        Log.d("Response", jsonobject.toString());
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("Error.Response", error.toString());
-            }
-        });
-    }
 
     @Override
-    public int checkConnection() {
-        getCloudDBData("", "", new VolleyCallback() {
+    public void checkConnection(String endpoint) {
+        getCloudDBData(endpoint, new VolleyCallback() {
             @Override
             public void onResponse(JSONArray result) {
                 try {
@@ -117,47 +94,113 @@ public class DBSynchronizer implements DoSync{
                 Log.d("Error.Response", error.toString());
             }
         });
-        return 0;
     }
 
     @Override
-    public int syncCloudDB() {
+    public void pullCloudDBToLocal() {
         //TODO
         //RUN ALL TABLE SYNC
-        return 0;
+        DatabaseHelper db =  new DatabaseHelper(context);
+
+        //college
+        List<College> collegeList = null;
+        JSONArray data = new JSONArray(collegeList);
+        getCloudDBData("https://jsonplaceholder.typicode.com/todos", new VolleyCallback() {
+            @Override
+            public void onResponse(JSONArray result) {
+                Log.d("College Response TimeStamp","success");
+                try {
+                    for (int i = 0; i < result.length(); i++) {
+                        JSONObject jsonobject = result.getJSONObject(i);
+                        Gson gson = new Gson();
+                        College college = gson.fromJson(jsonobject.toString(), College.class);
+                        try {
+                            db.createOrUpdate(college);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("College Error.Response", error.toString());
+            }});
+        //lastly set cloud local timestamp
+        setCloudDBTimeStamp();
     }
 
     @Override
-    public int syncLocalDB() {
+    public void pullLocalDBToCloud() {
         //TODO
         //RUN ALL TABLE SYNCH
-        return 0;
-    }
-
-    @Override
-    public String compareTimeStamp(String timestamp1, String timestamp2) {
-        if (Integer.parseInt(timestamp1) > Integer.parseInt(timestamp2))
-            return timestamp1;
-        else
-            return timestamp2;
-    }
-
-    @Override
-    public String getCloudDBTimeStamp() {
-        DBMetaData dbmd = new DBMetaData();
-        dbmd.setLast_sync_timestamp(db_helper.getCurrentTimeStamp());
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(dbmd);
+        DatabaseHelper db =  new DatabaseHelper(context);
+        List<College> collegeList = null;
         try {
-            JSONObject jsonObject = new JSONObject(jsonString);
-            JSONArray jsonArray = new JSONArray(jsonObject);
-            syncCloudDBTableData("endPoint", "table_name", jsonArray);
-            Log.d("Response", genericResponse.getJSONObject(0).toString());
-            return genericResponse.getJSONObject(0).toString();
-        }catch(JSONException ex){
-            Log.e("JSON error","SetCloud Timestamp Converting jason");
+            collegeList = db.getAll(College.class);
+            JSONArray data = new JSONArray(collegeList);
+            setCloudDBData("https://jsonplaceholder.typicode.com/todos",data, new VolleyCallback() {
+                @Override
+                public void onResponse(JSONArray result) {
+                        Log.d("College Response TimeStamp","success");
+                }
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("College Error.Response", error.toString());
+                }
+            });
+            //
+        }catch (SQLException ex){
+            Log.e("College pullLocalDBToCloud :",ex.toString());
         }
-        return null;
+        //lastly set cloud local timestamp
+        setLocalDBTimeStamp();
+    }
+
+    @Override
+    public boolean compareTimeStamp(String timestamp1, String timestamp2) {
+        return Integer.parseInt(timestamp1) > Integer.parseInt(timestamp2);
+    }
+
+    @Override
+    public void doSync() {
+        //get Cloud TimeStamp
+        getCloudDBData("https://jsonplaceholder.typicode.com/todos", new VolleyCallback() {
+            @Override
+            public void onResponse(JSONArray result) {
+                try {
+                    JSONObject jsonobject = result.getJSONObject(0);
+                    Log.d("Cloud Response TimeStamp", jsonobject.toString());
+                    //TODO
+                    //GetLocal TIMESTAMP
+                    String cloudTimeStamp = "";
+                    String localTimeStamp = getLocalDBTimeStamp();
+                    //Compare
+                    if(compareTimeStamp(localTimeStamp, cloudTimeStamp)){
+                        //Local is outdated
+                        //call pull cloud DB -> local DB
+                        pullCloudDBToLocal();
+                    }
+                    else{
+                        //Cloud is outdated
+                        //call pull local DB -> Cloud DB
+                        pullLocalDBToCloud();
+                    }
+
+
+                } catch (JSONException e) {
+                    Log.e("DOSYNCH:", e.toString());
+                }
+            }
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("DOSYNCH Error.Response", error.toString());
+            }
+        });
+
+
     }
 
     @Override
@@ -182,7 +225,6 @@ public class DBSynchronizer implements DoSync{
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray jsonArray = new JSONArray(jsonObject);
-            syncCloudDBTableData("endPoint", "table_name", jsonArray);
         }catch(JSONException ex){
             Log.e("JSON error","SetCloud Timestamp Converting jason");
         }
@@ -198,27 +240,5 @@ public class DBSynchronizer implements DoSync{
         }catch (SQLException ex){
             Log.e("DB error",ex.toString());
         }
-    }
-
-    @Override
-    public void synLocalDBTableData(String endPoint, String table_name) {
-
-    }
-
-    @Override
-    public void doSync() {
-        //ToDo
-        //Get Local and Cloud TimeStamp
-        //Compare
-        //IF LOCAL
-        //Do sync local db
-        //get cloud db
-        //set local db
-        //ELSE
-        //Do synch cloud db
-        //get local db
-        //set cloud db
-
-        //update ui
     }
 }

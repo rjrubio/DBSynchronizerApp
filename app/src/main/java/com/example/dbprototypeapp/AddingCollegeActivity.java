@@ -53,6 +53,7 @@ public class AddingCollegeActivity extends AppCompatActivity {
                         try {
                             //save new object to db
                             db.createOrUpdate(college);
+                            onBackPressed();
                         }catch(SQLException ex){
                             Log.e("College unable to save :", ex.toString());
                         }

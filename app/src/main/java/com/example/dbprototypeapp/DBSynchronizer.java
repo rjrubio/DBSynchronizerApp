@@ -130,8 +130,9 @@ public class DBSynchronizer implements DoSync{
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-                        setBothTimeStamp(db_helper.getCurrentTimeStamp());
                     }
+                    setBothTimeStamp(db_helper.getCurrentTimeStamp());
+                    progress.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

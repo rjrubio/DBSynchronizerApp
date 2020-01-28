@@ -62,7 +62,7 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.CollegeV
         final College college = collegeList.get(position);
 
         holder.college_name.setText(college.getCollegeName());
-        holder.college_status.setText(college.getStatus()> 0? "Active": "Inactive");
+        holder.college_status.setText(college.getStatus()!= "0"? "Active": "Inactive");
         holder.college_created_at.setText(college.getCreated_at());
         holder.college_id.setText(Long.toString(college.getId()));
 
@@ -128,7 +128,7 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.CollegeV
 
     }
 
-    public void presentAlert(int isChecked,String name, String age, final String index){
+    public void presentAlert(String isChecked,String name, String age, final String index){
         final EditText collegeName = new EditText(mContext);
         final CheckBox collegeStatus = new CheckBox(mContext);
 
@@ -137,7 +137,7 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.CollegeV
         collegeName.setWidth(100);
         collegeStatus.setWidth(100);
         collegeStatus.setText("Status");
-        collegeStatus.setChecked(isChecked >0?true:false);
+        collegeStatus.setChecked(isChecked != "0"?true:false);
 
         final LinearLayout linearLayout = new LinearLayout(mContext);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -155,7 +155,7 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.CollegeV
                         College college = new College();
                         college.setCollegeName(collegeName.getText().toString());
                         college.setId(Integer.parseInt(index));
-                        college.setStatus(collegeStatus.isChecked() ? 1:0);
+                        college.setStatus(collegeStatus.isChecked() ? "1":"0");
                         college.setCreatedAt(db.getCurrentTimeStamp());
 
 

@@ -108,6 +108,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return dao.delete(aId);
     }
 
+    public <T> List getAllWhere(Class clazz, String where) throws SQLException {
+        Dao<T, ?> dao = getDao(clazz);
+            return dao.queryBuilder()
+                    .where().gt("created_at", where).query();
+    }
+
 
     public String stringToSha256(String stringData) {
         String sha = "";

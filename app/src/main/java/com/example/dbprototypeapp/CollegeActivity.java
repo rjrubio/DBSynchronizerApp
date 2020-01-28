@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 public class CollegeActivity extends AppCompatActivity {
     private View btnAddCollege;
     private RecyclerView recycleView;
+    private SwipeRefreshLayout swipeLayout;
     private RecyclerView.LayoutManager layoutManager;
     List<College> collegeList = null;
     CollegeAdapter dw = null;
@@ -25,9 +27,8 @@ public class CollegeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_college);
-
-        btnAddCollege = findViewById(R.id.button_add_college);
         recycleView = findViewById(R.id.college_listView);
+        swipeLayout = findViewById(R.id.refreshView);
         layoutManager = new LinearLayoutManager(this);
         recycleView.setLayoutManager(layoutManager);
         DatabaseHelper db = new DatabaseHelper(this);
@@ -39,22 +40,31 @@ public class CollegeActivity extends AppCompatActivity {
         dw = new CollegeAdapter(collegeList,this);
         recycleView.setAdapter(dw);
 
-        btnAddCollege.setOnClickListener(onAddCollegeListener());
-    }
-
-    private View.OnClickListener onAddCollegeListener() {
-        return new View.OnClickListener() {
+        ((Main2Activity)getParent()).setFragmentRefreshListener(new Main2Activity.FragmentRefreshListener() {
             @Override
-            public void onClick(View v) {
-
-                // Start NewActivity.class
-                Intent myIntent = new Intent(CollegeActivity.this,
-                        AddingCollegeActivity.class);
-                startActivity(myIntent);
-
+            public void onRefresh() {
+                DatabaseHelper db = new DatabaseHelper(getParent());
+                try {
+                    collegeList = db.getAll(College.class);
+                    dw = new CollegeAdapter(collegeList,getParent());
+                    recycleView.setAdapter(dw);
+                    dw.notifyDataSetChanged();
+                    Log.e("College ron :","rubio");
+                }catch (SQLException ex){
+                    Log.e("College Activity :",ex.toString());
+                }
             }
-        };
+        });
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Load data to your RecyclerView
+                onResume();
+            }
+        });
     }
+
+
 
     @Override
     public void onResume()
@@ -66,7 +76,9 @@ public class CollegeActivity extends AppCompatActivity {
             dw = new CollegeAdapter(collegeList,this);
             recycleView.setAdapter(dw);
             dw.notifyDataSetChanged();
-            Log.e("College ron :","rubio");
+            if (swipeLayout.isRefreshing()) {
+                swipeLayout.setRefreshing(false);
+            }
         }catch (SQLException ex){
             Log.e("College Activity :",ex.toString());
         }

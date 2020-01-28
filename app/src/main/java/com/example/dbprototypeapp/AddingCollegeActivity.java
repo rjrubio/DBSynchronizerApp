@@ -48,7 +48,7 @@ public class AddingCollegeActivity extends AppCompatActivity {
                         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
                         College college = new College();
                         college.setCollegeName(input_college.getText().toString().trim());
-                        college.setStatus(checkBox.isChecked()?1:0);
+                        college.setStatus(checkBox.isChecked()?"1":"0");
                         college.setCreatedAt(db.getCurrentTimeStamp());
                         try {
                             //save new object to db

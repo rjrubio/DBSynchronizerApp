@@ -10,7 +10,7 @@ public class College implements Serializable {
     @DatabaseField(generatedId = true, columnName = "id")
     private int id;
     @DatabaseField(columnName = "status")
-    private int status;
+    private String status;
     @DatabaseField(columnName = "college_name")
     private String college_name;
     @DatabaseField(columnName = "created_at")
@@ -29,7 +29,7 @@ public class College implements Serializable {
         this.college_name = college_name;
     }
 
-    public void setStatus(int status){
+    public void setStatus(String status){
         this.status = status;
     }
 
@@ -42,7 +42,7 @@ public class College implements Serializable {
         return this.id;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return this.status;
     }
 

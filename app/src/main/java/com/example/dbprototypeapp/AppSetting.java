@@ -28,7 +28,7 @@ public class AppSetting extends AppCompatActivity {
         sharedprep = new SharedPreferencesManager(this);
         api = findViewById(R.id.api_text);
         clientID = findViewById(R.id.client_id_text);
-        if(sharedprep.getKey("API").isEmpty() && sharedprep.getKey("CLIENTID").isEmpty()){
+        if(sharedprep.getKey("API") !=null && sharedprep.getKey("CLIENTID")  !=null) {
             api.setText(sharedprep.getKey("API"));
             clientID.setText(sharedprep.getKey("CLIENTID"));
         }

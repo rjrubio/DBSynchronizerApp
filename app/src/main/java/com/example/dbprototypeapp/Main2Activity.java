@@ -41,7 +41,6 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         rq = Volley.newRequestQueue(this);
-        this.deleteDatabase("student_manager.db");
         mcontex = this;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
